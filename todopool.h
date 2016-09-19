@@ -36,7 +36,12 @@ private:
     QJsonObject &read(const QJsonObject &json);
     bool write(const QJsonObject &json);
     bool saveTodoList(const QString & saveFormat) const;
-    static bool comparison(const Todo &todo1, const Todo &todo2);
+    static bool asc_alph_comparison(const Todo &todo1, const Todo &todo2);
+    static bool desc_alph_comparison(const Todo &todo1, const Todo &todo2);
+    static bool asc_created_at_comparison(const Todo &todo1, const Todo &todo2);
+    static bool desc_created_at_comparison(const Todo &todo1, const Todo &todo2);
+    static bool asc_updated_at_comparison(const Todo &todo1, const Todo &todo2);
+    static bool desc_updated_at_comparison(const Todo &todo1, const Todo &todo2);
     QList<Todo> mTodoList;
     enum Ordering mOrdering;
     enum Sorting mSorting;

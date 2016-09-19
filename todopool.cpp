@@ -39,24 +39,34 @@ void TodoPool::setSorting(const QString &Sorting){
     enum TodoPool::Sorting mSorting = static_cast<TodoPool::Sorting>(value);
 }
 
-bool TodoPool::comparison(const Todo &todo1, const Todo &todo2)
+bool TodoPool::asc_alph_comparison(const Todo &todo1, const Todo &todo2)
 {
-   switch(mSorting)
-   {
-   case Alphabetical:
-       if (mOrdering == Asc)
-           return todo1.title().toLower()[0] < todo2.title().toLower()[0];
-       return todo1.title().toLower()[0] > todo2.title().toLower()[0];
-   case CreatedAt:
-       if (mOrdering == Asc)
-           return todo1.created_at() < todo2.created_at();
-       return todo1.created_at() > todo2.created_at();
-   case UpdatedAt:
-       if (mOrdering == Asc)
-           return todo1.updated_at() < todo2.updated_at();
-       return todo1.updated_at() < todo2.created_at();
-   }
-   return NULL;
+    return todo1.title().toLower()[0] < todo2.title().toLower()[0];
+}
+
+bool TodoPool::desc_alph_comparison(const Todo &todo1, const Todo &todo2)
+{
+    return todo1.title().toLower()[0] > todo2.title().toLower()[0];
+}
+
+bool TodoPool::asc_created_at_comparison(const Todo &todo1, const Todo &todo2)
+{
+    return todo1.created_at() < todo2.created_at();
+}
+
+bool TodoPool::desc_created_at_comparison(const Todo &todo1, const Todo &todo2)
+{
+    return todo1.created_at() > todo2.created_at();
+}
+
+bool TodoPool::asc_updated_at_comparison(const Todo &todo1, const Todo &todo2)
+{
+    return todo1.updated_at() < todo2.updated_at();
+}
+
+bool TodoPool::desc_updated_at_comparison(const Todo &todo1, const Todo &todo2)
+{
+    return todo1.updated_at() > todo2.updated_at();
 }
 
 const QString TodoPool::ordering() const
@@ -83,6 +93,20 @@ const QList<Todo> &TodoPool::todos() const
 
 void TodoPool::setTodoList(const QList<Todo> &todos){
     this->mTodoList = todos;
-    std::sort(this->mTodoList.begin(), this->mTodoList.end(), comparison);
+    switch(mSorting)
+    {
+    case Alphabetical:
+        if (mOrdering == Asc)
+            std::sort(this->mTodoList.begin(), this->mTodoList.end(), asc_alph_comparison);
+        std::sort(this->mTodoList.begin(), this->mTodoList.end(), desc_alph_comparison);
+    case CreatedAt:
+        if (mOrdering == Asc)
+            std::sort(this->mTodoList.begin(), this->mTodoList.end(), asc_created_at_comparison);
+        std::sort(this->mTodoList.begin(), this->mTodoList.end(), desc_created_at_comparison);
+    case UpdatedAt:
+        if (mOrdering == Asc)
+            std::sort(this->mTodoList.begin(), this->mTodoList.end(), asc_updated_at_comparison);
+        std::sort(this->mTodoList.begin(), this->mTodoList.end(), desc_updated_at_comparison);
+    }
 }
 
