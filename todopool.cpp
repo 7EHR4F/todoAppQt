@@ -4,6 +4,8 @@
 #include <QJsonObject>
 #include <QMetaObject>
 #include <QMetaEnum>
+#include <QFile>
+#include <iostream>
 #include <algorithm>
 #include "todopool.h"
 
@@ -15,11 +17,6 @@ TodoPool::TodoPool(const QString &todoListSorting, const QString &todoListOrderi
 
 TodoPool::~TodoPool()
 {
-}
-
-bool TodoPool::saveTodoList(const QString &saveFormat) const
-{
-    return true;
 }
 
 const QString TodoPool::sorting() const
@@ -110,3 +107,61 @@ void TodoPool::setTodoList(const QList<Todo> &todos){
     }
 }
 
+bool TodoPool::loadTodoList(const TodoPool::SaveFormat &saveFormat)
+{
+    QFile loadFile(saveFormat == Json
+        ? QStringLiteral("save.json")
+        : QStringLiteral("save.dat"));
+
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        qWarning("Couldn't open save file.");
+        return false;
+    }
+
+    QByteArray saveData = loadFile.readAll();
+
+    QJsonDocument loadDoc(saveFormat == Json
+        ? QJsonDocument::fromJson(saveData)
+        : QJsonDocument::fromBinaryData(saveData));
+
+    read(loadDoc.object());
+
+    return true;
+}
+
+bool TodoPool::saveTodoList(const TodoPool::SaveFormat &saveFormat)
+{
+    QFile saveFile(saveFormat == Json
+            ? QStringLiteral("save.json")
+            : QStringLiteral("save.dat"));
+
+        if (!saveFile.open(QIODevice::WriteOnly)) {
+            qWarning("Couldn't open save file.");
+            return false;
+        }
+
+        QJsonObject todoListObject;
+        write(todoListObject);
+        QJsonDocument saveDoc(todoListObject);
+        saveFile.write(saveFormat == Json
+            ? saveDoc.toJson()
+            : saveDoc.toBinaryData());
+
+        return true;
+}
+
+bool TodoPool::write(const QJsonObject &json)
+{
+    QList<Todo>::iterator i;
+    for (i = mTodoList.begin(); i != mTodoList.end(); ++i)
+        i->write(json["todo"].toObject());
+    return(true);
+}
+
+bool TodoPool::read(const QJsonObject &json)
+{
+    QList<Todo>::iterator i;
+    for (i = mTodoList.begin(); i != mTodoList.end(); ++i)
+        i->read(json["todo"].toObject());
+    return(true);
+}

@@ -107,7 +107,7 @@ const QJsonObject &Todo::read(const QJsonObject &json)
     return json;
 }
 
-bool Todo::write(QJsonObject &json)
+bool Todo::write(const QJsonObject &json)
 {
     json["title"] = this->mTitle;
     json["priority"] = this->mPriority;

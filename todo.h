@@ -22,7 +22,7 @@ public:
     };
 
     Todo();
-    Todo(const QString &title, const QString &content, const QString &todoPriority, const QString &todoType, const QDateTime &todoCreatedAt);
+    Todo(const QString &title = "", const QString &content = "", const QString &todoPriority = "Medium", const QString &todoType = "Text", const QDateTime &todoCreatedAt = QDateTime::currentDateTime());
     ~Todo();
 
     QString title() const;
@@ -43,7 +43,7 @@ public:
     void setUpdatedAt(const QDateTime &datetime);
 
     const QJsonObject &read(const QJsonObject &json);
-    bool write(QJsonObject &json);
+    bool write(const QJsonObject &json);
 
 private:
     QString mTitle;
