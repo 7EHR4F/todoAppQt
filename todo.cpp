@@ -5,7 +5,7 @@
 #include <QMetaEnum>
 
 #include "todo.h"
-
+/* this is the Todo object that will be part of the TodoPool */
 Todo::Todo(const QString &title, const QString &content, const QString &todoPriority, const QString &todoType, const QDateTime &todoCreatedAt)
 {
     this->setTitle(title);

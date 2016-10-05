@@ -9,10 +9,13 @@
 #include <algorithm>
 #include "todopool.h"
 
+/* this is the TodoPool, that is containing all the Todo objects */
+
 TodoPool::TodoPool(const QString &todoListSorting, const QString &todoListOrdering)
 {
     TodoPool::setSorting(todoListSorting);
     TodoPool::setOrdering(todoListOrdering);
+    TodoPool::loadTodoList(Json);
 }
 
 TodoPool::~TodoPool()
@@ -150,18 +153,18 @@ bool TodoPool::saveTodoList(const TodoPool::SaveFormat &saveFormat)
         return true;
 }
 
-bool TodoPool::write(const QJsonObject &json)
+const QJsonObject &TodoPool::write(const QJsonObject &json)
 {
     QList<Todo>::iterator i;
     for (i = mTodoList.begin(); i != mTodoList.end(); ++i)
         i->write(json["todo"].toObject());
-    return(true);
+    return(json);
 }
 
-bool TodoPool::read(const QJsonObject &json)
+const QJsonObject &TodoPool::read(const QJsonObject &json)
 {
     QList<Todo>::iterator i;
     for (i = mTodoList.begin(); i != mTodoList.end(); ++i)
         i->read(json["todo"].toObject());
-    return(true);
+    return(json);
 }

@@ -23,3 +23,6 @@ HEADERS  += \
     core.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES += \
+    save.json

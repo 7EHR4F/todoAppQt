@@ -34,8 +34,8 @@ private:
     void setOrdering(const QString &todoListOrdering);
     const QList<Todo> &todos() const;
     void setTodoList(const QList<Todo> &todos);
-    bool read(const QJsonObject &json);
-    bool write(const QJsonObject &json);
+    const QJsonObject &read(const QJsonObject &json);
+    const QJsonObject &write(const QJsonObject &json);
     bool loadTodoList(const SaveFormat  &saveFormat);
     bool saveTodoList(const SaveFormat &saveFormat);
     static bool asc_alph_comparison(const Todo &todo1, const Todo &todo2);
